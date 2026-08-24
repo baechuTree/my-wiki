@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>페이지 목록</title>
+</head>
+<body>
+<header>
+
+</header>
+<section>
+    <div>
+        <h1>페이지 목록</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>페이지 이름</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="titleAndPath, state : ${titlesAndPaths}">
+                <th><a th:text="${titleAndPath.title}" th:href="@{{path}(path = ${titleAndPath.path})}"></a></th>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>위키 홈</title>
+</head>
+<body>
+<header>
+    <h1>안녕 세계!!!</h1>
+</header>
+<section>
+    <h2>이 페이지는 위키의 홈 페이지입니다.</h2>
+    <a th:href="@{{path}(path = ${documentListPath})}">페이지 목록</a>
+</section>
+</body>
+</html>

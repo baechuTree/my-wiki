@@ -38,3 +38,5 @@ out/
 
 ### My Additional Ignore ###
 /src/main/resources/application-local.properties
+constraint.md
+Spring Boot 기반 개인 웹 위키 개발 계획서.md

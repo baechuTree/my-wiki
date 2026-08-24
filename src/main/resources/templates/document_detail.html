@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${documentTitle}">Not found</title>
+</head>
+<body>
+<header>
+
+</header>
+<section>
+    <div>
+        <h1 th:text="${documentTitle}">페이지 제목</h1>
+    </div>
+    <div th:text="${documentArticle}">
+        페이지 내용
+    </div>
+</section>
+</body>
+</html>
