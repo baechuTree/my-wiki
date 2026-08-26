@@ -40,3 +40,5 @@ out/
 /src/main/resources/application-local.properties
 constraint.md
 Spring Boot 기반 개인 웹 위키 개발 계획서.md
+계획서2_추가수정사항.md
+/src/test/**/constants/LocalConstantsForTest.java
