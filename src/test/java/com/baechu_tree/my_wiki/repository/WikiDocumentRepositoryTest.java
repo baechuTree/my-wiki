@@ -75,7 +75,33 @@ public class WikiDocumentRepositoryTest {
         Optional<WikiDocument> foundDocument = repository.findById(savedDocument.getDocumentId());
 
         // then
-        if (foundDocument.isEmpty()) throw new IllegalStateException("findById로 저장한 문서 찾기 실패");
+        if (foundDocument.isEmpty()) throw new IllegalStateException("findById로 저장된 문서 찾기 실패");
+        WikiDocument doc = foundDocument.get();
+
+        Assertions.assertThat(doc.getDocumentId()).isNotNull();
+        Assertions.assertThat(doc.getDocumentTitle()).isEqualTo(document.getDocumentTitle());
+        Assertions.assertThat(doc.getContent()).isEqualTo(document.getContent());
+        Assertions.assertThat(doc.getCreatedAt()).isNotNull();
+        Assertions.assertThat(doc.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    void findByTitle() {
+        // given
+        WikiDocument document = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
+
+        // when
+        repository.save(document);
+        Optional<WikiDocument> foundDocument = repository.findByTitle(title1);
+
+        // then
+        if (foundDocument.isEmpty()) throw new IllegalStateException("findByTitle로 저장된 문서 찾기 실패");
         WikiDocument doc = foundDocument.get();
 
         Assertions.assertThat(doc.getDocumentId()).isNotNull();
