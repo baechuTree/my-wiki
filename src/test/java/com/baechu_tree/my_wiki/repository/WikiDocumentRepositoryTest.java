@@ -10,6 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 public class WikiDocumentRepositoryTest {
 
@@ -53,5 +54,34 @@ public class WikiDocumentRepositoryTest {
         Assertions.assertThat(savedDocument.getContent()).isEqualTo(document.getContent());
         Assertions.assertThat(savedDocument.getCreatedAt()).isNotNull();
         Assertions.assertThat(savedDocument.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    void findById() {
+        // given
+        WikiDocument document = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
+
+        // when
+        WikiDocument savedDocument = repository.save(document);
+        if (savedDocument.getDocumentId() == null) {
+            throw new IllegalStateException("Repository의 save 메서드에서 오류 발생");
+        }
+        Optional<WikiDocument> foundDocument = repository.findById(savedDocument.getDocumentId());
+
+        // then
+        if (foundDocument.isEmpty()) throw new IllegalStateException("findById로 저장한 문서 찾기 실패");
+        WikiDocument doc = foundDocument.get();
+
+        Assertions.assertThat(doc.getDocumentId()).isNotNull();
+        Assertions.assertThat(doc.getDocumentTitle()).isEqualTo(document.getDocumentTitle());
+        Assertions.assertThat(doc.getContent()).isEqualTo(document.getContent());
+        Assertions.assertThat(doc.getCreatedAt()).isNotNull();
+        Assertions.assertThat(doc.getUpdatedAt()).isNotNull();
     }
 }
