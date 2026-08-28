@@ -243,11 +243,47 @@ public class WikiDocumentRepositoryTest {
 
     @Test
     void deleteById() {
+        // given
+        WikiDocument document = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
 
+        // when
+        WikiDocument savedDocument = repository.save(document);
+        if (savedDocument.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
+
+        repository.deleteById(savedDocument.getDocumentId());
+
+        // then
+        assertThrows(IllegalStateException.class, () -> {
+            repository.findById(savedDocument.getDocumentId());
+        });
     }
 
     @Test
     void deleteByTitle() {
+        // given
+        WikiDocument document = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
 
+        // when
+        WikiDocument savedDocument = repository.save(document);
+        if (savedDocument.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
+
+        repository.deleteByTitle(savedDocument.getDocumentTitle());
+
+        // then
+        assertThrows(IllegalStateException.class, () -> {
+            repository.findByTitle(savedDocument.getDocumentTitle());
+        });
     }
 }
