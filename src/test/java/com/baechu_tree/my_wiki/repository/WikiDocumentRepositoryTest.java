@@ -10,9 +10,12 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class WikiDocumentRepositoryTest {
 
@@ -56,6 +59,31 @@ public class WikiDocumentRepositoryTest {
         Assertions.assertThat(savedDocument.getContent()).isEqualTo(document.getContent());
         Assertions.assertThat(savedDocument.getCreatedAt()).isNotNull();
         Assertions.assertThat(savedDocument.getUpdatedAt()).isNotNull();
+    }
+
+    @Test @DisplayName("WikiDocumentRepositoryTest:save - 실패: 제목이 중복되는 문서는 저장되지 않아야 한다")
+    void save_failure_duplicateTitle() {
+        // given
+        WikiDocument document1 = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
+        WikiDocument document2 = new WikiDocument(
+                null,
+                title1,
+                "owo What's this?",
+                null,
+                null
+        );
+
+        // when, then
+        assertThrows(SQLException.class, () -> {
+            repository.save(document1);
+            repository.save(document2);
+        });
     }
 
     @Test
@@ -153,5 +181,20 @@ public class WikiDocumentRepositoryTest {
             Assertions.assertThat(foundDocuments.get(i).getCreatedAt()).isNotNull();
             Assertions.assertThat(foundDocuments.get(i).getUpdatedAt()).isNotNull();
         }
+    }
+
+    @Test
+    void update() {
+
+    }
+
+    @Test
+    void deleteById() {
+
+    }
+
+    @Test
+    void deleteByTitle() {
+
     }
 }
