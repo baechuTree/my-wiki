@@ -185,7 +185,36 @@ public class WikiDocumentRepositoryTest {
 
     @Test
     void update() {
+        // given
+        WikiDocument documentBefore = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
+        WikiDocument documentAfter1 = new WikiDocument(
+                null,
+                title1,
+                "I changed content!",
+                null,
+                null
+        );
+        WikiDocument documentAfter2 = new WikiDocument(
+                null,
+                title2,
+                "I changed title!",
+                null,
+                null
+        );
 
+        // when
+        WikiDocument savedDocument = repository.save(documentBefore);
+        if (savedDocument.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
+
+        documentAfter1.setDocumentId(savedDocument.getDocumentId());
+        repository.update(documentAfter1);
+        // then
     }
 
     @Test

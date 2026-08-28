@@ -130,6 +130,11 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
     }
 
     @Override
+    public WikiDocument updateTitle(String legacyTitle, String newTitle) {
+        return null;
+    }
+
+    @Override
     public void deleteById(int documentId) {
 
     }
