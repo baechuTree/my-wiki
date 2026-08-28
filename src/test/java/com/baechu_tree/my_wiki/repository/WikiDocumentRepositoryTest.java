@@ -7,10 +7,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +78,7 @@ public class WikiDocumentRepositoryTest {
         );
 
         // when, then
-        assertThrows(SQLException.class, () -> {
+        assertThrows(IllegalStateException.class, () -> {
             repository.save(document1);
             repository.save(document2);
         });
@@ -102,17 +100,17 @@ public class WikiDocumentRepositoryTest {
         if (savedDocument.getDocumentId() == null) {
             throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
         }
-        Optional<WikiDocument> foundDocument = repository.findById(savedDocument.getDocumentId());
+        Optional<WikiDocument> foundDocumentOptional = repository.findById(savedDocument.getDocumentId());
 
         // then
-        if (foundDocument.isEmpty()) throw new IllegalStateException("findById로 저장된 문서 찾기 실패");
-        WikiDocument doc = foundDocument.get();
+        if (foundDocumentOptional.isEmpty()) throw new IllegalStateException("findById로 저장된 문서 찾기 실패");
+        WikiDocument foundDocument = foundDocumentOptional.get();
 
-        Assertions.assertThat(doc.getDocumentId()).isNotNull();
-        Assertions.assertThat(doc.getDocumentTitle()).isEqualTo(document.getDocumentTitle());
-        Assertions.assertThat(doc.getContent()).isEqualTo(document.getContent());
-        Assertions.assertThat(doc.getCreatedAt()).isNotNull();
-        Assertions.assertThat(doc.getUpdatedAt()).isNotNull();
+        Assertions.assertThat(foundDocument.getDocumentId()).isNotNull();
+        Assertions.assertThat(foundDocument.getDocumentTitle()).isEqualTo(document.getDocumentTitle());
+        Assertions.assertThat(foundDocument.getContent()).isEqualTo(document.getContent());
+        Assertions.assertThat(foundDocument.getCreatedAt()).isNotNull();
+        Assertions.assertThat(foundDocument.getUpdatedAt()).isNotNull();
     }
 
     @Test
@@ -129,17 +127,17 @@ public class WikiDocumentRepositoryTest {
         // when
         WikiDocument savedDocument = repository.save(document);
         if (savedDocument.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
-        Optional<WikiDocument> foundDocument = repository.findByTitle(title1);
+        Optional<WikiDocument> foundDocumentOptional = repository.findByTitle(title1);
 
         // then
-        if (foundDocument.isEmpty()) throw new IllegalStateException("findByTitle로 저장된 문서 찾기 실패");
-        WikiDocument doc = foundDocument.get();
+        if (foundDocumentOptional.isEmpty()) throw new IllegalStateException("findByTitle로 저장된 문서 찾기 실패");
+        WikiDocument foundDocument = foundDocumentOptional.get();
 
-        Assertions.assertThat(doc.getDocumentId()).isNotNull();
-        Assertions.assertThat(doc.getDocumentTitle()).isEqualTo(document.getDocumentTitle());
-        Assertions.assertThat(doc.getContent()).isEqualTo(document.getContent());
-        Assertions.assertThat(doc.getCreatedAt()).isNotNull();
-        Assertions.assertThat(doc.getUpdatedAt()).isNotNull();
+        Assertions.assertThat(foundDocument.getDocumentId()).isNotNull();
+        Assertions.assertThat(foundDocument.getDocumentTitle()).isEqualTo(document.getDocumentTitle());
+        Assertions.assertThat(foundDocument.getContent()).isEqualTo(document.getContent());
+        Assertions.assertThat(foundDocument.getCreatedAt()).isNotNull();
+        Assertions.assertThat(foundDocument.getUpdatedAt()).isNotNull();
     }
 
     @Test
@@ -193,17 +191,10 @@ public class WikiDocumentRepositoryTest {
                 null,
                 null
         );
-        WikiDocument documentAfter1 = new WikiDocument(
+        WikiDocument documentAfter = new WikiDocument(
                 null,
-                title1,
+                null,
                 "I changed content!",
-                null,
-                null
-        );
-        WikiDocument documentAfter2 = new WikiDocument(
-                null,
-                title2,
-                "I changed title!",
                 null,
                 null
         );
@@ -212,9 +203,42 @@ public class WikiDocumentRepositoryTest {
         WikiDocument savedDocument = repository.save(documentBefore);
         if (savedDocument.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
 
-        documentAfter1.setDocumentId(savedDocument.getDocumentId());
-        repository.update(documentAfter1);
+        documentAfter.setDocumentId(savedDocument.getDocumentId());
+        WikiDocument updatedDocument = repository.update(documentAfter);
+
         // then
+        Assertions.assertThat(updatedDocument.getDocumentId()).isNotNull();
+        Assertions.assertThat(updatedDocument.getDocumentTitle()).isEqualTo(documentAfter.getDocumentTitle());
+        Assertions.assertThat(updatedDocument.getContent()).isEqualTo(documentAfter.getContent());
+        Assertions.assertThat(updatedDocument.getCreatedAt()).isNotNull();
+        Assertions.assertThat(updatedDocument.getUpdatedAt()).isNotNull();
+    }
+
+    @Test @DisplayName("WikiDocumentRepositoryTest:update - 실패: 문서를 다른 제목으로 저장하려고 할 경우 실패해야 함")
+    void update_failure_differentTitle() {
+        // given
+        WikiDocument documentBefore = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
+        WikiDocument documentAfter = new WikiDocument(
+                null,
+                title2,
+                "I want change title!",
+                null,
+                null
+        );
+
+        // when, then
+        assertThrows(IllegalStateException.class, () -> {
+            WikiDocument savedDocument = repository.save(documentBefore);
+            documentAfter.setDocumentId(savedDocument.getDocumentId());
+
+            repository.update(documentAfter);
+        });
     }
 
     @Test

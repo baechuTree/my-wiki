@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,19 +52,22 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
                     ResultSet rs = pstmt.getGeneratedKeys();
                     ) {
                 if (rs.next()) {
-                    // 6: 주석 처리 - 매개변수는 건들지 않고 7번에서 튜플을 직접 찾아 사용
+                    // 6. 주석 처리 - 매개변수로 들어온 객체는 건들지 않고, 7번에서 튜플을 직접 찾아 사용
 //                    document.setDocumentId(rs.getInt(1));
                     
                     // 7. findById를 이용해 저장된 튜플을 다시 찾아 반환
                     Optional<WikiDocument> foundDocument = findById(rs.getInt(1));
                     if(foundDocument.isPresent()) return foundDocument.get();
+                    // 7-1. findById가 저장된 문서를 찾지 못했다면, 예외 발생
+                    else throw new SQLException("findById가 저장된 문서를 찾지 못함. 저장은 성공했을 수 있음");
                 }
-                
-                // 7-1. findById로 저장된 튜플을 찾지 못했다면 매개변수 객체를 그대로 반환
-                return document;
+                else {
+                    // 7-2. ResultSet이 id값을 받지 못했다면, 예외 발생
+                    throw new SQLException("저장된 문서의 id값 조회 실패. 저장이 실패했을 수 있음");
+                }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
     }
 
@@ -109,13 +113,20 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
                 // 7-1. 결과가 비어있으면 비어있는 객체 반환
                 return Optional.empty();
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
     }
 
     @Override
     public Optional<WikiDocument> findByTitle(String documentTitle) {
+        try (Connection conn = dataSource.getConnection()) {
+            try (PreparedStatement pstmt = conn.prepareStatement("test")){
+                throw new SQLException("test");
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("test test");
+        }
         return Optional.empty();
     }
 
