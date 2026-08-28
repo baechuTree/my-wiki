@@ -41,7 +41,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
                 Connection connection = dataSource.getConnection();
                 // 3
                 PreparedStatement pstmt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-                ) {
+        ) {
             // 4
             pstmt.setString(1, document.getDocumentTitle());
             pstmt.setString(2, document.getContent());
@@ -50,18 +50,17 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
             pstmt.executeUpdate();
             try (
                     ResultSet rs = pstmt.getGeneratedKeys();
-                    ) {
+            ) {
                 if (rs.next()) {
                     // 6. 주석 처리 - 매개변수로 들어온 객체는 건들지 않고, 7번에서 튜플을 직접 찾아 사용
 //                    document.setDocumentId(rs.getInt(1));
-                    
+
                     // 7. findById를 이용해 저장된 튜플을 다시 찾아 반환
                     Optional<WikiDocument> foundDocument = findById(rs.getInt(1));
-                    if(foundDocument.isPresent()) return foundDocument.get();
-                    // 7-1. findById가 저장된 문서를 찾지 못했다면, 예외 발생
+                    if (foundDocument.isPresent()) return foundDocument.get();
+                        // 7-1. findById가 저장된 문서를 찾지 못했다면, 예외 발생
                     else throw new SQLException("findById가 저장된 문서를 찾지 못함. 저장은 성공했을 수 있음");
-                }
-                else {
+                } else {
                     // 7-2. ResultSet이 id값을 받지 못했다면, 예외 발생
                     throw new SQLException("저장된 문서의 id값 조회 실패. 저장이 실패했을 수 있음");
                 }
@@ -90,7 +89,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
                 // try문의 소괄호: try-with-resource 문법
                 // 변수를 만들어 객체(resource, 자원)를 할당하는 코드를 삽입할 수 있음
                 // 여기서 선언된 객체는 try문이 끝나거나 catch로 넘어가면 자동으로 닫힘(close(), 즉 메모리에서 삭제됨)
-                ) {
+        ) {
             // 4. 파라미터 설정
             ps.setInt(1, documentId);
 
@@ -102,14 +101,14 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
                             rs.getInt("document_id"),
                             rs.getString("document_title"),
                             rs.getString("content"),
-                            rs.getObject(4, LocalDateTime.class),
-                            rs.getObject(5, LocalDateTime.class)
+                            rs.getObject("created_at", LocalDateTime.class),
+                            rs.getObject("updated_at", LocalDateTime.class)
                     );
 
                     // 7. Java 엔티티 반환
                     return Optional.of(document);
                 }
-                
+
                 // 7-1. 결과가 비어있으면 비어있는 객체 반환
                 return Optional.empty();
             }
@@ -120,14 +119,45 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
 
     @Override
     public Optional<WikiDocument> findByTitle(String documentTitle) {
-        try (Connection conn = dataSource.getConnection()) {
-            try (PreparedStatement pstmt = conn.prepareStatement("test")){
-                throw new SQLException("test");
+
+        // 1
+        String sql = "SELECT * " +
+                "FROM wiki_documents " +
+                "WHERE document_title = ?";
+
+        try (
+                // 2
+                Connection connection = dataSource.getConnection();
+                // 3
+                PreparedStatement pstmt = connection.prepareStatement(sql)
+        ) {
+            // 4
+            pstmt.setString(1, documentTitle);
+
+            try (
+                    // 5
+                    ResultSet rs = pstmt.executeQuery()
+            ) {
+                if (rs.next()) {
+                    // 6
+                    WikiDocument document = new WikiDocument(
+                            rs.getInt("document_id"),
+                            rs.getString("document_title"),
+                            rs.getString("content"),
+                            rs.getObject("created_at", LocalDateTime.class),
+                            rs.getObject("updated_at", LocalDateTime.class)
+                    );
+
+                    // 7
+                    return Optional.of(document);
+                }
+
+                // 7-1
+                return Optional.empty();
             }
-        } catch (SQLException e) {
-            throw new IllegalStateException("test test");
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
         }
-        return Optional.empty();
     }
 
     @Override
