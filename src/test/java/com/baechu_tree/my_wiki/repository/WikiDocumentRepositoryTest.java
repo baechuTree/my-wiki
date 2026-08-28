@@ -10,6 +10,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class WikiDocumentRepositoryTest {
@@ -70,7 +72,7 @@ public class WikiDocumentRepositoryTest {
         // when
         WikiDocument savedDocument = repository.save(document);
         if (savedDocument.getDocumentId() == null) {
-            throw new IllegalStateException("Repository의 save 메서드에서 오류 발생");
+            throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
         }
         Optional<WikiDocument> foundDocument = repository.findById(savedDocument.getDocumentId());
 
@@ -97,7 +99,8 @@ public class WikiDocumentRepositoryTest {
         );
 
         // when
-        repository.save(document);
+        WikiDocument savedDocument = repository.save(document);
+        if (savedDocument.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
         Optional<WikiDocument> foundDocument = repository.findByTitle(title1);
 
         // then
@@ -109,5 +112,46 @@ public class WikiDocumentRepositoryTest {
         Assertions.assertThat(doc.getContent()).isEqualTo(document.getContent());
         Assertions.assertThat(doc.getCreatedAt()).isNotNull();
         Assertions.assertThat(doc.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    void findAll() {
+        // given
+        WikiDocument document1 = new WikiDocument(
+                null,
+                title1,
+                "Kyahooo",
+                null,
+                null
+        );
+        WikiDocument document2 = new WikiDocument(
+                null,
+                title2,
+                "owo What's this?",
+                null,
+                null
+        );
+
+        List<WikiDocument> documents = new ArrayList<>();
+        documents.add(document1);
+        documents.add(document2);
+
+        // when
+        WikiDocument savedDocument1 = repository.save(document1);
+        WikiDocument savedDocument2 = repository.save(document2);
+        if (savedDocument1.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
+        if (savedDocument2.getDocumentId() == null) throw new IllegalStateException("WikiDocumentRepository의 save 메서드에서 오류 발생");
+        List<WikiDocument> foundDocuments = repository.findAll();
+
+        // then
+        if (foundDocuments.isEmpty()) throw new IllegalStateException("저장된 문서 찾기 실패");
+
+        for (int i = 0; i < foundDocuments.size(); i++) {
+            Assertions.assertThat(foundDocuments.get(i).getDocumentId()).isNotNull();
+            Assertions.assertThat(foundDocuments.get(i).getDocumentTitle()).isEqualTo(documents.get(i).getDocumentTitle());
+            Assertions.assertThat(foundDocuments.get(i).getContent()).isEqualTo(documents.get(i).getContent());
+            Assertions.assertThat(foundDocuments.get(i).getCreatedAt()).isNotNull();
+            Assertions.assertThat(foundDocuments.get(i).getUpdatedAt()).isNotNull();
+        }
     }
 }
