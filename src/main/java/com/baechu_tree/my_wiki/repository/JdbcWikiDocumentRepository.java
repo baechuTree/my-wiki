@@ -271,11 +271,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
 
             int result = pstmt.executeUpdate();
 
-            if (result > 1) {
-                throw new IllegalStateException("2개 이상의 문서가 삭제됨!");
-            } else if (result < 1) {
-                throw new IllegalStateException("문서가 하나도 삭제되지 않음!");
-            }
+            if (result > 1) throw new IllegalStateException("2개 이상의 문서가 삭제됨!");
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -295,11 +291,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
 
             int result = pstmt.executeUpdate();
 
-            if (result > 1) {
-                throw new IllegalStateException("2개 이상의 문서가 삭제됨!");
-            } else if (result < 1) {
-                throw new IllegalStateException("문서가 하나도 삭제되지 않음!");
-            }
+            if (result > 1) throw new IllegalStateException("2개 이상의 문서가 삭제됨!");
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
