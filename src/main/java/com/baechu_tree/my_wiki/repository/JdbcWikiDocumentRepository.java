@@ -260,7 +260,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
     @Override
     public void deleteById(int documentId) {
 
-        String sql = "DELETE FROM wiki_documents" +
+        String sql = "DELETE FROM wiki_documents " +
                 "WHERE document_id = ?";
 
         try (
@@ -284,7 +284,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
     @Override
     public void deleteByTitle(String documentTitle) {
 
-        String sql = "DELETE FROM wiki_documents" +
+        String sql = "DELETE FROM wiki_documents " +
                 "WHERE document_title = ?";
 
         try (
