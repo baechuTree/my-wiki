@@ -18,7 +18,7 @@ public interface WikiDocumentRepository {
     // update
 
     /**
-     * 문서를 수정하는 메서드. id 및 title(제목)은 수정이 불가함
+     * 문서를 수정하는 메서드. id 및 title(제목)은 수정이 불가함. 수정하려는 정보에 DB에 저장된 것과는 다른 title이 담겨 있으면 오류 발생.
      * @param document 이 객체가 가진 documentId 값을 사용해 수정할 문서를 찾고, 이 객체가 가진 나머지 값으로 문서 정보가 수정됨
      * @return 수정이 끝난 문서 객체
      */

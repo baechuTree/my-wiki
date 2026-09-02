@@ -207,7 +207,7 @@ public class WikiDocumentRepositoryTest {
         );
         WikiDocument documentAfter = new WikiDocument(
                 null,
-                null,
+                title1,
                 "I changed content!",
                 null,
                 null

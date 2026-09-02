@@ -197,7 +197,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
         if (document.getDocumentId() == null) {
             throw new IllegalStateException("수정하려는 문서의 id값을 매개변수로 받지 못함");
         }
-        
+
         // 업데이트하려는 문서 정보의 title과 DB에 저장된 문서의 title이 같은지 확인
         Optional<WikiDocument> originalDocument = findById(document.getDocumentId());
         if (originalDocument.isPresent()) {
