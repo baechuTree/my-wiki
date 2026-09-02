@@ -273,9 +273,7 @@ public class WikiDocumentRepositoryTest {
         repository.deleteById(savedDocument.getDocumentId());
 
         // then
-        assertThrows(IllegalStateException.class, () -> {
-            repository.findById(savedDocument.getDocumentId());
-        });
+        Assertions.assertThat(repository.findById(savedDocument.getDocumentId())).isEqualTo(Optional.empty());
     }
 
     @Test
@@ -296,8 +294,6 @@ public class WikiDocumentRepositoryTest {
         repository.deleteByTitle(savedDocument.getDocumentTitle());
 
         // then
-        assertThrows(IllegalStateException.class, () -> {
-            repository.findByTitle(savedDocument.getDocumentTitle());
-        });
+        Assertions.assertThat(repository.findById(savedDocument.getDocumentId())).isEqualTo(Optional.empty());
     }
 }
