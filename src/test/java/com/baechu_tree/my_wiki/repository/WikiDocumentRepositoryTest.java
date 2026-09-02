@@ -180,6 +180,13 @@ public class WikiDocumentRepositoryTest {
             Assertions.assertThat(foundDocuments.get(i).getUpdatedAt()).isNotNull();
         }
     }
+    
+    @Test @DisplayName("WikiDocumentRepositoryTest:findAll: 저장된 튜플이 없는 경우 빈 리스트가 반환되어야 한다")
+    void findAll_whenNothingFound() {
+        List<WikiDocument> foundDocuments = repository.findAll();
+
+        Assertions.assertThat(foundDocuments.size()).isEqualTo(0);
+    }
 
     @Test
     void update() {

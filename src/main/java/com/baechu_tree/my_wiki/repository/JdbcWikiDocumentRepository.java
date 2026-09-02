@@ -58,7 +58,7 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
                     // 7. findById를 이용해 저장된 튜플을 다시 찾아 반환
                     Optional<WikiDocument> foundDocument = findById(rs.getInt(1));
                     if (foundDocument.isPresent()) return foundDocument.get();
-                        // 7-1. findById가 저장된 문서를 찾지 못했다면, 예외 발생
+                    // 7-1. findById가 저장된 문서를 찾지 못했다면, 예외 발생
                     else throw new SQLException("findById가 저장된 문서를 찾지 못함. 저장은 성공했을 수 있음");
                 } else {
                     // 7-2. ResultSet이 id값을 받지 못했다면, 예외 발생
@@ -162,26 +162,152 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
 
     @Override
     public List<WikiDocument> findAll() {
-        return List.of();
+
+        String sql = "SELECT * " +
+                "FROM wiki_documents";
+
+        List<WikiDocument> documents = new ArrayList<>();
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()
+        ) {
+            while (rs.next()) {
+                WikiDocument document = new WikiDocument(
+                        rs.getInt("document_id"),
+                        rs.getString("document_title"),
+                        rs.getString("content"),
+                        rs.getObject("created_by", LocalDateTime.class),
+                        rs.getObject("updated_by", LocalDateTime.class)
+                );
+
+                documents.add(document);
+            }
+
+            return documents;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override
     public WikiDocument update(WikiDocument document) {
-        return null;
+
+        if (document.getDocumentId() == null) {
+            throw new IllegalStateException("수정하려는 문서의 id값을 매개변수로 받지 못함");
+        }
+
+        String sql = "UPDATE wiki_documents " +
+                "SET " +
+                "content = ? " +
+                "WHERE document_id = ?";
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(sql)
+        ) {
+            pstmt.setString(1, document.getContent());
+            pstmt.setInt(2, document.getDocumentId());
+
+            try (
+                    ResultSet rs = pstmt.executeQuery()
+            ) {
+                if (rs.next()) {
+                    if (rs.getInt(1) == 0) throw new IllegalStateException("수정을 시도했지만, 수정된 문서가 없음");
+
+                    Optional<WikiDocument> updatedDocument = findById(document.getDocumentId());
+
+                    if (updatedDocument.isPresent()) return updatedDocument.get();
+                    throw new IllegalStateException("findById가 수정된 문서를 찾지 못함. 수정 자체는 성공했을 수 있음");
+                }
+                throw new IllegalStateException("DB가 문서 수정 정보(rs.next)를 반환하지 않음. 수정이 실패했을 수 있음");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override
     public WikiDocument updateTitle(int documentId, String newTitle) {
-        return null;
+
+        String sql = "UPDATE wiki_documents " +
+                "SET " +
+                "document_title = ? " +
+                "WHERE document_id = ?";
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(sql)
+        ) {
+            pstmt.setString(1, newTitle);
+            pstmt.setInt(2, documentId);
+
+            try (
+                    ResultSet rs = pstmt.executeQuery()
+            ) {
+                if (rs.next()) {
+                    if (rs.getInt(1) == 0) throw new IllegalStateException("수정을 시도했지만, 수정된 문서가 없음");
+
+                    Optional<WikiDocument> updatedDocument = findById(documentId);
+
+                    if (updatedDocument.isPresent()) return updatedDocument.get();
+                    throw new IllegalStateException("findById가 수정된 문서를 찾지 못함. 수정 자체는 성공했을 수 있음");
+                }
+                throw new IllegalStateException("DB가 문서 수정 정보(rs.next)를 반환하지 않음. 수정이 실패했을 수 있음");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override
     public void deleteById(int documentId) {
 
+        String sql = "DELETE FROM wiki_documents" +
+                "WHERE document_id = ?";
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(sql)
+        ) {
+            pstmt.setInt(1, documentId);
+
+            try (
+                    ResultSet rs = pstmt.executeQuery()
+            ) {
+                if (rs.next()) {
+                    return;
+                }
+                throw new IllegalStateException("DB가 문서 삭제 정보(rs.next)를 반환하지 않음. 삭제가 실패했을 수 있음");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override
     public void deleteByTitle(String documentTitle) {
 
+        String sql = "DELETE FROM wiki_documents" +
+                "WHERE document_title = ?";
+
+        try (
+                Connection connection = dataSource.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(sql)
+        ) {
+            pstmt.setString(1, documentTitle);
+
+            try (
+                    ResultSet rs = pstmt.executeQuery()
+            ) {
+                if (rs.next()) {
+                    return;
+                }
+                throw new IllegalStateException("DB가 문서 삭제 정보(rs.next)를 반환하지 않음. 삭제가 실패했을 수 있음");
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
