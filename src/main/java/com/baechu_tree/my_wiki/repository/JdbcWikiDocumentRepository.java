@@ -210,19 +210,17 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
             pstmt.setString(1, document.getContent());
             pstmt.setInt(2, document.getDocumentId());
 
-            try (
-                    ResultSet rs = pstmt.executeQuery()
-            ) {
-                if (rs.next()) {
-                    if (rs.getInt(1) == 0) throw new IllegalStateException("수정을 시도했지만, 수정된 문서가 없음");
+            int result = pstmt.executeUpdate();
 
-                    Optional<WikiDocument> updatedDocument = findById(document.getDocumentId());
-
-                    if (updatedDocument.isPresent()) return updatedDocument.get();
-                    throw new IllegalStateException("findById가 수정된 문서를 찾지 못함. 수정 자체는 성공했을 수 있음");
-                }
-                throw new IllegalStateException("DB가 문서 수정 정보(rs.next)를 반환하지 않음. 수정이 실패했을 수 있음");
+            if (result > 1) {
+                throw new IllegalStateException("2개 이상의 문서가 수정됨!");
+            } else if (result < 1) {
+                throw new IllegalStateException("문서가 하나도 수정되지 않음!");
             }
+
+            Optional<WikiDocument> updatedDocument = findById(document.getDocumentId());
+            if (updatedDocument.isPresent()) return updatedDocument.get();
+            throw new IllegalStateException("findById가 수정된 문서를 찾지 못함. 수정은 성공했을 수 있음");
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -243,19 +241,17 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
             pstmt.setString(1, newTitle);
             pstmt.setInt(2, documentId);
 
-            try (
-                    ResultSet rs = pstmt.executeQuery()
-            ) {
-                if (rs.next()) {
-                    if (rs.getInt(1) == 0) throw new IllegalStateException("수정을 시도했지만, 수정된 문서가 없음");
+            int result = pstmt.executeUpdate();
 
-                    Optional<WikiDocument> updatedDocument = findById(documentId);
-
-                    if (updatedDocument.isPresent()) return updatedDocument.get();
-                    throw new IllegalStateException("findById가 수정된 문서를 찾지 못함. 수정 자체는 성공했을 수 있음");
-                }
-                throw new IllegalStateException("DB가 문서 수정 정보(rs.next)를 반환하지 않음. 수정이 실패했을 수 있음");
+            if (result > 1) {
+                throw new IllegalStateException("2개 이상의 문서가 수정됨!");
+            } else if (result < 1) {
+                throw new IllegalStateException("문서가 하나도 수정되지 않음!");
             }
+
+            Optional<WikiDocument> updatedDocument = findById(documentId);
+            if (updatedDocument.isPresent()) return updatedDocument.get();
+            throw new IllegalStateException("findById가 수정된 문서를 찾지 못함. 수정은 성공했을 수 있음");
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -273,13 +269,12 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
         ) {
             pstmt.setInt(1, documentId);
 
-            try (
-                    ResultSet rs = pstmt.executeQuery()
-            ) {
-                if (rs.next()) {
-                    return;
-                }
-                throw new IllegalStateException("DB가 문서 삭제 정보(rs.next)를 반환하지 않음. 삭제가 실패했을 수 있음");
+            int result = pstmt.executeUpdate();
+
+            if (result > 1) {
+                throw new IllegalStateException("2개 이상의 문서가 삭제됨!");
+            } else if (result < 1) {
+                throw new IllegalStateException("문서가 하나도 삭제되지 않음!");
             }
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -298,13 +293,12 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
         ) {
             pstmt.setString(1, documentTitle);
 
-            try (
-                    ResultSet rs = pstmt.executeQuery()
-            ) {
-                if (rs.next()) {
-                    return;
-                }
-                throw new IllegalStateException("DB가 문서 삭제 정보(rs.next)를 반환하지 않음. 삭제가 실패했을 수 있음");
+            int result = pstmt.executeUpdate();
+
+            if (result > 1) {
+                throw new IllegalStateException("2개 이상의 문서가 삭제됨!");
+            } else if (result < 1) {
+                throw new IllegalStateException("문서가 하나도 삭제되지 않음!");
             }
         } catch (Exception e) {
             throw new IllegalStateException(e);

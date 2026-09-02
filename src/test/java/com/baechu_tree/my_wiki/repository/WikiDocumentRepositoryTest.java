@@ -4,6 +4,7 @@ import com.baechu_tree.my_wiki.constants.LocalConstantsForTest;
 import com.baechu_tree.my_wiki.domain.WikiDocument;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -18,17 +19,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class WikiDocumentRepositoryTest {
 
     // 테스트에 사용할 document_title 이름
-    String title1 = "test1";
-    String title2 = "test2";
+    static String title1 = "test1";
+    static String title2 = "test2";
 
     // Jdbc 테스트를 위한 DataSource 직접 생성
-    DataSource dataSource = new DriverManagerDataSource(
+    static DataSource dataSource = new DriverManagerDataSource(
             LocalConstantsForTest.DB_DATASOURCE_URL_FOR_TEST,
             LocalConstantsForTest.DB_DATASOURCE_USERNAME_FOR_TEST,
             LocalConstantsForTest.DB_DATASOURCE_PASSWORD_FOR_TEST
     );
 
-    WikiDocumentRepository repository = new JdbcWikiDocumentRepository(dataSource);
+    static WikiDocumentRepository repository = new JdbcWikiDocumentRepository(dataSource);
+
+    @BeforeAll
+    static void BeforeAll() {
+        repository.deleteByTitle(title1);
+        repository.deleteByTitle(title2);
+    }
 
     @AfterEach
     void AfterEach() {
