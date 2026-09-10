@@ -1,6 +1,8 @@
 package com.baechu_tree.my_wiki.controller;
 
 import com.baechu_tree.my_wiki.constants.WikiPaths;
+import com.baechu_tree.my_wiki.domain.WikiDocument;
+import com.baechu_tree.my_wiki.service.WikiDocumentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,18 +14,22 @@ import java.util.List;
 @Controller
 public class WikiController {
 
+    private final WikiDocumentService documentService;
+
+    public WikiController(WikiDocumentService documentService) {
+        this.documentService = documentService;
+    }
+
     @GetMapping(WikiPaths.PATH_DOCUMENT_LIST)
     public String DocumentList(Model model) {
-        TitleAndRoute testTitleAndRoute1 = new TitleAndRoute("Spring");
-        TitleAndRoute testTitleAndRoute2 = new TitleAndRoute("Java");
-        TitleAndRoute testTitleAndRoute3 = new TitleAndRoute("React");
+        List<TitleAndRoute> titlesAndPaths = new ArrayList<>();
 
-        List<TitleAndRoute> testTitlesAndPaths = new ArrayList<>();
-        testTitlesAndPaths.add(testTitleAndRoute1);
-        testTitlesAndPaths.add(testTitleAndRoute2);
-        testTitlesAndPaths.add(testTitleAndRoute3);
+        List<WikiDocument> allDocuments = documentService.findAll();
+        for (WikiDocument document : allDocuments) {
+            titlesAndPaths.add(new TitleAndRoute(document.getDocumentTitle()));
+        }
 
-        model.addAttribute("titlesAndPaths", testTitlesAndPaths);
+        model.addAttribute("titlesAndPaths", titlesAndPaths);
         return "document_list";
     }
 
