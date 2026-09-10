@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Jdbc로 DB CRUD를 하는 클래스
+ * Jdbc로 DB CRUD를 하는 클래스.
  * 코드에 대한 설명은 findById 메서드에 있음
  */
 public class JdbcWikiDocumentRepository implements WikiDocumentRepository {

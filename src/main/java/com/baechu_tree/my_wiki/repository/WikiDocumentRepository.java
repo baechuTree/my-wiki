@@ -8,6 +8,12 @@ import java.util.Optional;
 public interface WikiDocumentRepository {
 
     // create
+
+    /**
+     * 문서를 저장하는 메서드.
+     * @param document
+     * @return 저장된 문서의 정보를 담은 객체. 문서 저장에 실패했다면 예외 발생. 빈 객체를 반환하는 경우는 없음.
+     */
     WikiDocument save(WikiDocument document);
 
     // read
