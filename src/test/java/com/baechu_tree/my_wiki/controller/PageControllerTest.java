@@ -37,15 +37,15 @@ class PageControllerTest {
                 // HomeController가 templates/index.html에 해당하는 "index"를 반환하는지 확인한다.
                 .andExpect(view().name("index"))
                 // Controller가 목록 페이지 주소를 Model에 전달하는지 확인한다.
-                .andExpect(model().attribute("documentListPath", WikiPaths.PATH_DOCUMENT_LIST))
+                .andExpect(model().attribute("documentListPath", WikiPaths.PATH_DOCUMENT_LIST_PAGE))
                 // 렌더링된 HTML에 목록 페이지 링크가 있는지 확인한다.
-                .andExpect(content().string(containsString(WikiPaths.PATH_DOCUMENT_LIST)));
+                .andExpect(content().string(containsString(WikiPaths.PATH_DOCUMENT_LIST_PAGE)));
     }
 
     @Test
     void documentListPage_returnsListTemplateAndDocumentLinks() throws Exception {
         // URL 상수를 사용하므로 목록 페이지 주소를 바꾸면 테스트도 함께 따라간다.
-        mockMvc.perform(get(WikiPaths.PATH_DOCUMENT_LIST))
+        mockMvc.perform(get(WikiPaths.PATH_DOCUMENT_LIST_PAGE))
                 .andExpect(status().isOk())
                 // WikiController가 templates/document_list.html을 반환하는지 확인한다.
                 .andExpect(view().name("document_list"))

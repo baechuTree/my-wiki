@@ -22,7 +22,7 @@ public class WikiController {
         this.documentService = documentService;
     }
 
-    @GetMapping(WikiPaths.PATH_DOCUMENT_LIST)
+    @GetMapping(WikiPaths.PATH_DOCUMENT_LIST_PAGE)
     public String DocumentListPage(Model model) {
         List<TitleAndRoute> titlesAndPaths = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class WikiController {
         return "document_list";
     }
 
-    @GetMapping(WikiPaths.PATH_DOCUMENT_DETAIL)
+    @GetMapping(WikiPaths.PATH_DOCUMENT_DETAIL_PAGE)
     public String DocumentDetailPage(Model model, @PathVariable String documentTitle) {
         Optional<WikiDocument> documentOptional = documentService.findByTitle(documentTitle);
 

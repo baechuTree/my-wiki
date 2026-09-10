@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>문서 만들기</title>
+</head>
+<body>
+<h1>문서 만들기</h1>
+<form action="/wiki/save" method="post">
+    <div>
+        <label for="titleTextInput">제목</label>
+        <input type="text" name="document_title" class="form-control" id="titleTextInput" placeholder="제목을 입력하세요...">
+    </div>
+
+    <div>
+        <label for="contentTextInput" class="form-label">내용</label>
+        <textarea name="content" id="contentTextInput" rows="30" cols="50" placeholder="내용을 입력하세요..."></textarea>
+    </div>
+
+    <button type="submit">만들기</button>
+</form>
+</body>
+</html>
