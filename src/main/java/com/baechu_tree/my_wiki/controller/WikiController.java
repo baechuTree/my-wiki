@@ -50,18 +50,18 @@ public class WikiController {
         return "document_detail";
     }
 
-    @GetMapping("/wiki/save_page")
+    @GetMapping(WikiPaths.PATH_DOCUMENT_SAVE_PAGE)
     public String DocumentSavePage(Model model) {
         return "document_save";
     }
 
-    @PostMapping("wiki/save")
+    @PostMapping(WikiPaths.PATH_DOCUMENT_SAVE)
     public String DocumentSave(Model model) {
         // TODO: 문서 세이브 로직 완성 필요!
-        return null;
+        return "redirect:/";
     }
 
-    @GetMapping("/wiki/update_page")
+    @GetMapping(WikiPaths.PATH_DOCUMENT_UPDATE_PAGE)
     public String DocumentUpdatePage(Model model, @PathVariable String documentTitle) {
 
         Optional<WikiDocument> documentOptional = documentService.findByTitle(documentTitle);
@@ -75,20 +75,20 @@ public class WikiController {
         return "document_update";
     }
 
-    @PostMapping("wiki/update")
+    @PostMapping(WikiPaths.PATH_DOCUMENT_UPDATE)
     public String DocumentUpdate(Model model) {
         // TODO: 문서 업데이트 로직 완성 필요!
         return null;
     }
 
-    @PostMapping("wiki/delete")
+    @PostMapping(WikiPaths.PATH_DOCUMENT_DELETE)
     public String DocumentDelete(Model model) {
         // TODO: 문서 삭제 로직 완성 필요!
         return null;
     }
 
     private String GetPathOfSpecificDocumentDetail(String documentTitle) {
-        return WikiPaths.GetPathOfSpecificDocumentDetail(documentTitle);
+        return WikiPaths.GetPathOfSpecificDocumentDetailPage(documentTitle);
     }
 
     class TitleAndRoute {

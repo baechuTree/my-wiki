@@ -12,7 +12,7 @@ public final class WikiPaths {
     public static final String PATH_DOCUMENT_UPDATE = "/wiki/update";
     public static final String PATH_DOCUMENT_DELETE = "/wiki/delete";
 
-    public static String GetPathOfSpecificDocumentDetail(String title) {
+    public static String GetPathOfSpecificDocumentDetailPage(String title) {
         return "/wiki/doc/" + title;
     }
 }

@@ -11,7 +11,7 @@ public class HomeController {
     @GetMapping("/")
     public String Home(Model model) {
         model.addAttribute("documentListPagePath", WikiPaths.PATH_DOCUMENT_LIST_PAGE);
-        model.addAttribute("documentSavePagePath", );
+        model.addAttribute("documentSavePagePath", WikiPaths.PATH_DOCUMENT_SAVE_PAGE);
         return "index";
     }
 }

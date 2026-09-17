@@ -55,7 +55,7 @@ class PageControllerTest {
                 .andExpect(content().string(containsString("Java")))
                 // Java 문서로 이동하는 링크가 실제 HTML에 생성되는지 확인한다.
                 .andExpect(content().string(containsString(
-                        WikiPaths.GetPathOfSpecificDocumentDetail("Java")
+                        WikiPaths.GetPathOfSpecificDocumentDetailPage("Java")
                 )));
     }
 
@@ -64,7 +64,7 @@ class PageControllerTest {
         String documentTitle = "Java";
 
         // /wiki/doc/Java 요청을 만들 때도 WikiPaths의 메서드를 사용한다.
-        mockMvc.perform(get(WikiPaths.GetPathOfSpecificDocumentDetail(documentTitle)))
+        mockMvc.perform(get(WikiPaths.GetPathOfSpecificDocumentDetailPage(documentTitle)))
                 .andExpect(status().isOk())
                 // WikiController가 templates/document_detail.html을 반환하는지 확인한다.
                 .andExpect(view().name("document_detail"))
