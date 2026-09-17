@@ -1,6 +1,7 @@
 package com.baechu_tree.my_wiki.repository;
 
 import com.baechu_tree.my_wiki.domain.WikiDocument;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Jdbc로 DB CRUD를 하는 클래스.
  * 코드에 대한 설명은 findById 메서드에 있음
  */
+@Repository
 public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
 
     private final DataSource dataSource;

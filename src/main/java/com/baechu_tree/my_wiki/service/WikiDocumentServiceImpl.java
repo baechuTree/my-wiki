@@ -2,14 +2,18 @@ package com.baechu_tree.my_wiki.service;
 
 import com.baechu_tree.my_wiki.domain.WikiDocument;
 import com.baechu_tree.my_wiki.repository.WikiDocumentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class WikiDocumentServiceImpl implements WikiDocumentService {
 
     private final WikiDocumentRepository repository;
 
+    @Autowired
     public WikiDocumentServiceImpl(WikiDocumentRepository repository) {
         this.repository = repository;
     }

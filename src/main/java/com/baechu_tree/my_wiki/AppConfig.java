@@ -14,21 +14,16 @@ public class AppConfig {
 
     // Bean에 필요한 데이터 또는 객체 추가
 
-    private DataSource dataSource;
-
-    public AppConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+//    private DataSource dataSource;
+//
+//    public AppConfig(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//    }
 
     // Bean 등록
 
-    @Bean
-    WikiDocumentRepository wikiDocumentRepository() {
-        return new JdbcWikiDocumentRepository(dataSource);
-    }
-
-    @Bean
-    WikiDocumentService wikiDocumentService() {
-        return new WikiDocumentServiceImpl(wikiDocumentRepository());
-    }
+//    @Bean
+//    WikiDocumentRepository wikiDocumentRepository() {
+//        return new JdbcWikiDocumentRepository(dataSource);
+//    }
 }
