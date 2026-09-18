@@ -16,11 +16,25 @@
             <thead>
             <tr>
                 <th>페이지 이름</th>
+                <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="titleAndPath, state : ${titlesAndPaths}">
                 <th><a th:text="${titleAndPath.title}" th:href="@{{path}(path = ${titleAndPath.path})}"></a></th>
+                <th>
+                    <a href="#" th:href="@{{path}(path = ${titleAndPath.updatePath})}">수정</a>
+                    <form th:id="${titleAndPath.title}+'Update'" action="${titleAndPath.updatePath}" method="post" style="display:none;">
+                        <input type="hidden" name="document_title" th:value="${titleAndPath.title}">
+                    </form>
+                </th>
+                <th>
+                    <a href="#" th:href="@{{path}(path = ${titleAndPath.deletePath})}">삭제</a>
+                    <form th:id="${titleAndPath.title}+'Delete'" action="${titleAndPath.deletePath}" method="post" style="display:none;">
+                        <input type="hidden" name="document_title" th:value="${titleAndPath.title}">
+                    </form>
+                </th>
             </tr>
             </tbody>
         </table>
