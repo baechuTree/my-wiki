@@ -13,9 +13,25 @@
     <div>
         <h1 th:text="${documentTitle}">페이지 제목</h1>
     </div>
+    <div>
+        <a href="#" onclick="postRequest('update'); return null;">수정</a>
+        <form id="update" th:action="${updatePath}" method="post" style="display:none;">
+            <input type="hidden" name="document_title" th:value="${documentTitle}">
+        </form>
+
+        <a href="#" onclick="postRequest('delete'); return null;">삭제</a>
+        <form id="delete" th:action="${deletePath}" method="post" style="display:none;">
+            <input type="hidden" name="document_title" th:value="${documentTitle}">
+        </form>
+    </div>
     <div th:text="${documentArticle}">
         페이지 내용
     </div>
 </section>
+<script>
+function postRequest(id) {
+    document.getElementById(id).submit();
+}
+</script>
 </body>
 </html>

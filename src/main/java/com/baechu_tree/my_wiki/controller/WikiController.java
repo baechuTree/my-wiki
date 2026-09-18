@@ -49,6 +49,8 @@ public class WikiController {
 
         model.addAttribute("documentTitle", document.getDocumentTitle());
         model.addAttribute("documentArticle", document.getContent());
+        model.addAttribute("updatePath", WikiPaths.PATH_DOCUMENT_UPDATE);
+        model.addAttribute("deletePath", WikiPaths.PATH_DOCUMENT_DELETE);
 
         return "document_detail";
     }
