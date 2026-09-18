@@ -180,8 +180,8 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
                         rs.getInt("document_id"),
                         rs.getString("document_title"),
                         rs.getString("content"),
-                        rs.getObject("created_by", LocalDateTime.class),
-                        rs.getObject("updated_by", LocalDateTime.class)
+                        rs.getObject("created_at", LocalDateTime.class),
+                        rs.getObject("updated_at", LocalDateTime.class)
                 );
 
                 documents.add(document);
