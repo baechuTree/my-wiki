@@ -1,6 +1,7 @@
 package com.baechu_tree.my_wiki.repository;
 
 import com.baechu_tree.my_wiki.domain.WikiDocument;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * 코드에 대한 설명은 findById 메서드에 있음
  */
 @Repository
+@RequiredArgsConstructor
 public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
 
     private final DataSource dataSource;
@@ -25,10 +27,6 @@ public class JdbcWikiDocumentRepository implements WikiDocumentRepository {
     // 접근하는 DB에 대한 정보는, 앱이 실행될 때
     // Spring Boot가 application.properties에 적힌 DB 정보를 확인한 다음
     // DataSource를 Bean으로 만든 뒤 그 정보를 넣어준다
-
-    public JdbcWikiDocumentRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 
     @Override
     public WikiDocument save(WikiDocument document) {

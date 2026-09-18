@@ -2,6 +2,7 @@ package com.baechu_tree.my_wiki.service;
 
 import com.baechu_tree.my_wiki.domain.WikiDocument;
 import com.baechu_tree.my_wiki.repository.WikiDocumentRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,16 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class WikiDocumentServiceImpl implements WikiDocumentService {
 
     // TODO: repository를 사용하는 각 메서드에 제약조건 체크 및 오류 대응 기능 추가해야 함!
 
     private final WikiDocumentRepository repository;
-
-    @Autowired
-    public WikiDocumentServiceImpl(WikiDocumentRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public int save(WikiDocument document) {
