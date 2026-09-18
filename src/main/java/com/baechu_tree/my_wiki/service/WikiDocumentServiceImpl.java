@@ -11,6 +11,8 @@ import java.util.Optional;
 @Service
 public class WikiDocumentServiceImpl implements WikiDocumentService {
 
+    // TODO: repository를 사용하는 각 메서드에 제약조건 체크 및 오류 대응 기능 추가해야 함!
+
     private final WikiDocumentRepository repository;
 
     @Autowired

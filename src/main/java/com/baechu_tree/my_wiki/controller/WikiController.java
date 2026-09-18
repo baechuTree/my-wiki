@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +57,19 @@ public class WikiController {
     }
 
     @PostMapping(WikiPaths.PATH_DOCUMENT_SAVE)
-    public String DocumentSave(Model model) {
+    public String DocumentSave(Model model, @RequestParam("document_title") String documentTitle, @RequestParam("content") String content) {
         // TODO: 문서 세이브 로직 완성 필요!
-        return "redirect:/";
+        WikiDocument document = new WikiDocument(
+                null,
+                documentTitle,
+                content,
+                null,
+                null
+        );
+        int savedDocumentId = documentService.save(document);
+
+        if (savedDocumentId == -1) return "temp_error"; // TODO: 제대로 된 에러 처리 필요!
+        else return "redirect:/";
     }
 
     @GetMapping(WikiPaths.PATH_DOCUMENT_UPDATE_PAGE)
