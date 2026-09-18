@@ -11,28 +11,28 @@
 </header>
 <section>
     <div>
-        <h1>페이지 목록</h1>
+        <h1>문서 목록</h1>
         <table>
             <thead>
             <tr>
-                <th>페이지 이름</th>
+                <th>문서 이름</th>
                 <th></th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="titleAndPath, state : ${titlesAndPaths}">
-                <th><a th:text="${titleAndPath.title}" th:href="@{{path}(path = ${titleAndPath.path})}"></a></th>
+            <tr th:each="documentInfo, state : ${documentInfos}">
+                <th><a th:text="${documentInfo.title}" th:href="${documentInfo.path}"></a></th>
                 <th>
-                    <a href="#" th:href="@{{path}(path = ${titleAndPath.updatePath})}">수정</a>
-                    <form th:id="${titleAndPath.title}+'Update'" action="${titleAndPath.updatePath}" method="post" style="display:none;">
-                        <input type="hidden" name="document_title" th:value="${titleAndPath.title}">
+                    <a href="#" th:onclick="postRequest([[${documentInfo.title}+'Update']]); return null;">수정</a>
+                    <form th:id="${documentInfo.title}+'Update'" th:action="${updatePath}" method="post" style="display:none;">
+                        <input type="hidden" name="document_title" th:value="${documentInfo.title}">
                     </form>
                 </th>
                 <th>
-                    <a href="#" th:href="@{{path}(path = ${titleAndPath.deletePath})}">삭제</a>
-                    <form th:id="${titleAndPath.title}+'Delete'" action="${titleAndPath.deletePath}" method="post" style="display:none;">
-                        <input type="hidden" name="document_title" th:value="${titleAndPath.title}">
+                    <a href="#" th:onclick="postRequest([[${documentInfo.title}+'Delete']]); return null;">삭제</a>
+                    <form th:id="${documentInfo.title}+'Delete'" th:action="${deletePath}" method="post" style="display:none;">
+                        <input type="hidden" name="document_title" th:value="${documentInfo.title}">
                     </form>
                 </th>
             </tr>
@@ -40,5 +40,11 @@
         </table>
     </div>
 </section>
+<script>
+function postRequest(id) {
+    console.log(id + " 요청 완료")
+    document.getElementById(id).submit();
+}
+</script>
 </body>
 </html>

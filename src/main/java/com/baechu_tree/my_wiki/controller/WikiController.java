@@ -25,14 +25,16 @@ public class WikiController {
 
     @GetMapping(WikiPaths.PATH_DOCUMENT_LIST_PAGE)
     public String DocumentListPage(Model model) {
-        List<TitleAndRoute> titlesAndPaths = new ArrayList<>();
+        List<DocumentInfo> documentInfos = new ArrayList<>();
 
         List<WikiDocument> allDocuments = documentService.findAll();
         for (WikiDocument document : allDocuments) {
-            titlesAndPaths.add(new TitleAndRoute(document.getDocumentTitle()));
+            documentInfos.add(new DocumentInfo(document.getDocumentTitle()));
         }
 
-        model.addAttribute("titlesAndPaths", titlesAndPaths);
+        model.addAttribute("documentInfos", documentInfos);
+        model.addAttribute("updatePath", WikiPaths.PATH_DOCUMENT_UPDATE);
+        model.addAttribute("deletePath", WikiPaths.PATH_DOCUMENT_DELETE);
 
         return "document_list";
     }
@@ -58,7 +60,6 @@ public class WikiController {
 
     @PostMapping(WikiPaths.PATH_DOCUMENT_SAVE)
     public String DocumentSave(Model model, @RequestParam("document_title") String documentTitle, @RequestParam("content") String content) {
-        // TODO: 문서 세이브 로직 완성 필요!
         WikiDocument document = new WikiDocument(
                 null,
                 documentTitle,
@@ -102,12 +103,12 @@ public class WikiController {
         return WikiPaths.GetPathOfSpecificDocumentDetailPage(documentTitle);
     }
 
-    class TitleAndRoute {
+    class DocumentInfo {
 
         public String title;
         public String path;
 
-        public TitleAndRoute(String title) {
+        public DocumentInfo(String title) {
             this.title = title;
             this.path = GetPathOfSpecificDocumentDetail(title);
         }
