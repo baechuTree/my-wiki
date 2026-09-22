@@ -14,10 +14,7 @@
         <h1 th:text="${document.getDocumentTitle()}">페이지 제목</h1>
     </div>
     <div>
-        <a href="#" onclick="postRequest('update'); return null;">수정</a>
-        <form id="update" th:action="${updatePagePath}" method="post" style="display:none;">
-            <input type="hidden" name="document_title" th:value="${documentTitle}">
-        </form>
+        <a href="#" th:href="${updatePagePath}">수정</a>
 
         <a href="#" onclick="postRequest('delete'); return null;">삭제</a>
         <form id="delete" th:action="${deletePath}" method="post" style="display:none;">

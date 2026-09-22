@@ -8,11 +8,15 @@ public final class WikiPaths {
     public static final String PATH_DOCUMENT_LIST_PAGE = "/wiki/list";
     public static final String PATH_DOCUMENT_SAVE_PAGE = "/wiki/save_page";
     public static final String PATH_DOCUMENT_SAVE = "/wiki/save";
-    public static final String PATH_DOCUMENT_UPDATE_PAGE = "/wiki/update_page";
+    public static final String PATH_DOCUMENT_UPDATE_PAGE = "/wiki/update_page/{documentTitle}";
     public static final String PATH_DOCUMENT_UPDATE = "/wiki/update";
     public static final String PATH_DOCUMENT_DELETE = "/wiki/delete";
 
     public static String GetPathOfSpecificDocumentDetailPage(String title) {
         return "/wiki/doc/" + title;
+    }
+
+    public static String GetPathOfSpecificDocumentUpdatePage(String title) {
+        return "/wiki/update_page/" + title;
     }
 }

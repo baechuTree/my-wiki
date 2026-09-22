@@ -22,12 +22,9 @@
             </thead>
             <tbody>
             <tr th:each="documentInfo, state : ${documentInfos}">
-                <th><a th:text="${documentInfo.getDocument().getDocumentTitle()}" th:href="${documentInfo.getPath()}"></a></th>
+                <th><a th:text="${documentInfo.getDocument().getDocumentTitle()}" th:href="${documentInfo.getDetailPagePath()}"></a></th>
                 <th>
-                    <a href="#" th:onclick="postRequest([[${documentInfo.getDocument().getDocumentTitle()}+'Update']]); return null;">수정</a>
-                    <form th:id="${documentInfo.getDocument().getDocumentTitle()}+'Update'" th:action="${updatePagePath}" method="post" style="display:none;">
-                        <input type="hidden" name="document_title" th:value="${documentInfo.getDocument().getDocumentTitle()}">
-                    </form>
+                    <a href="#" th:href="${documentInfo.getUpdatePagePath()}">수정</a>
                 </th>
                 <th>
                     <a href="#" th:onclick="postRequest([[${documentInfo.getDocument().getDocumentTitle()}+'Delete']]); return null;">삭제</a>

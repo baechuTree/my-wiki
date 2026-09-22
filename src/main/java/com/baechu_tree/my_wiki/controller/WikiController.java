@@ -33,7 +33,6 @@ public class WikiController {
         }
 
         model.addAttribute("documentInfos", documentInfos);
-        model.addAttribute("updatePagePath", WikiPaths.PATH_DOCUMENT_UPDATE_PAGE);
         model.addAttribute("deletePath", WikiPaths.PATH_DOCUMENT_DELETE);
 
         return "document_list";
@@ -48,7 +47,7 @@ public class WikiController {
         WikiDocument document = documentOptional.get();
 
         model.addAttribute("document", document);
-        model.addAttribute("updatePagePath", WikiPaths.PATH_DOCUMENT_UPDATE_PAGE);
+        model.addAttribute("updatePagePath", WikiPaths.GetPathOfSpecificDocumentUpdatePage(document.getDocumentTitle()));
         model.addAttribute("deletePath", WikiPaths.PATH_DOCUMENT_DELETE);
 
         return "document_detail";
@@ -82,10 +81,9 @@ public class WikiController {
         Optional<WikiDocument> documentOptional = documentService.findByTitle(documentTitle);
 
         if (documentOptional.isEmpty()) return "temp_error"; // TODO: 제대로 된 에러 처리 필요!
-
         WikiDocument document = documentOptional.get();
 
-        model.addAttribute("originalDocument", document);
+        model.addAttribute("document", document);
         model.addAttribute("updatePath", WikiPaths.PATH_DOCUMENT_UPDATE);
 
         return "document_update";
@@ -113,19 +111,17 @@ public class WikiController {
         return "redirect:/";
     }
 
-    private String GetPathOfSpecificDocumentDetail(String documentTitle) {
-        return WikiPaths.GetPathOfSpecificDocumentDetailPage(documentTitle);
-    }
-
     @Getter
-    class DocumentInfo {
+    static class DocumentInfo {
 
         private final WikiDocument document;
-        private final String path;
+        private final String detailPagePath;
+        private final String updatePagePath;
 
         public DocumentInfo(WikiDocument document) {
             this.document = document;
-            this.path = GetPathOfSpecificDocumentDetail(document.getDocumentTitle());
+            this.detailPagePath = WikiPaths.GetPathOfSpecificDocumentDetailPage(document.getDocumentTitle());
+            this.updatePagePath = WikiPaths.GetPathOfSpecificDocumentUpdatePage(document.getDocumentTitle());
         }
     }
 }
