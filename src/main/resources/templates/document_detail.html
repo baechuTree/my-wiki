@@ -11,11 +11,11 @@
 </header>
 <section>
     <div>
-        <h1 th:text="${documentTitle}">페이지 제목</h1>
+        <h1 th:text="${document.getDocumentTitle()}">페이지 제목</h1>
     </div>
     <div>
         <a href="#" onclick="postRequest('update'); return null;">수정</a>
-        <form id="update" th:action="${updatePath}" method="post" style="display:none;">
+        <form id="update" th:action="${updatePagePath}" method="post" style="display:none;">
             <input type="hidden" name="document_title" th:value="${documentTitle}">
         </form>
 
@@ -24,7 +24,7 @@
             <input type="hidden" name="document_title" th:value="${documentTitle}">
         </form>
     </div>
-    <div th:text="${documentArticle}">
+    <div th:text="${document.getContent()}">
         페이지 내용
     </div>
 </section>

@@ -5,6 +5,7 @@ import com.baechu_tree.my_wiki.domain.WikiDocument;
 import com.baechu_tree.my_wiki.dto.WikiCreateRequest;
 import com.baechu_tree.my_wiki.dto.WikiUpdateRequest;
 import com.baechu_tree.my_wiki.service.WikiDocumentService;
+import lombok.Getter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +29,11 @@ public class WikiController {
 
         List<WikiDocument> allDocuments = documentService.findAll();
         for (WikiDocument document : allDocuments) {
-            documentInfos.add(new DocumentInfo(document.getDocumentTitle()));
+            documentInfos.add(new DocumentInfo(document));
         }
 
         model.addAttribute("documentInfos", documentInfos);
-        model.addAttribute("updatePath", WikiPaths.PATH_DOCUMENT_UPDATE);
+        model.addAttribute("updatePagePath", WikiPaths.PATH_DOCUMENT_UPDATE_PAGE);
         model.addAttribute("deletePath", WikiPaths.PATH_DOCUMENT_DELETE);
 
         return "document_list";
@@ -46,9 +47,8 @@ public class WikiController {
 
         WikiDocument document = documentOptional.get();
 
-        model.addAttribute("documentTitle", document.getDocumentTitle());
-        model.addAttribute("documentArticle", document.getContent());
-        model.addAttribute("updatePath", WikiPaths.PATH_DOCUMENT_UPDATE);
+        model.addAttribute("document", document);
+        model.addAttribute("updatePagePath", WikiPaths.PATH_DOCUMENT_UPDATE_PAGE);
         model.addAttribute("deletePath", WikiPaths.PATH_DOCUMENT_DELETE);
 
         return "document_detail";
@@ -56,6 +56,8 @@ public class WikiController {
 
     @GetMapping(WikiPaths.PATH_DOCUMENT_SAVE_PAGE)
     public String DocumentSavePage(Model model) {
+        model.addAttribute("savePath", WikiPaths.PATH_DOCUMENT_SAVE);
+
         return "document_save";
     }
 
@@ -84,6 +86,7 @@ public class WikiController {
         WikiDocument document = documentOptional.get();
 
         model.addAttribute("originalDocument", document);
+        model.addAttribute("updatePath", WikiPaths.PATH_DOCUMENT_UPDATE);
 
         return "document_update";
     }
@@ -104,8 +107,9 @@ public class WikiController {
     }
 
     @PostMapping(WikiPaths.PATH_DOCUMENT_DELETE)
-    public String DocumentDelete(Model model, @RequestParam String documentId) {
-        documentService.deleteById(Integer.parseInt(documentId));
+    public String DocumentDelete(Model model, @RequestParam String documentTitle) {
+        // TODO: 타이틀값을 받아 문서를 지울 경우, 해커가 요청 정보를 쉽게 만들 수 있어 보안에 취약할 수 있음. 개선 필요
+        documentService.deleteByTitle(documentTitle);
         return "redirect:/";
     }
 
@@ -113,14 +117,15 @@ public class WikiController {
         return WikiPaths.GetPathOfSpecificDocumentDetailPage(documentTitle);
     }
 
+    @Getter
     class DocumentInfo {
 
-        public String title;
-        public String path;
+        private final WikiDocument document;
+        private final String path;
 
-        public DocumentInfo(String title) {
-            this.title = title;
-            this.path = GetPathOfSpecificDocumentDetail(title);
+        public DocumentInfo(WikiDocument document) {
+            this.document = document;
+            this.path = GetPathOfSpecificDocumentDetail(document.getDocumentTitle());
         }
     }
 }

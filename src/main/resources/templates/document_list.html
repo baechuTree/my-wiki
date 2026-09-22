@@ -22,17 +22,17 @@
             </thead>
             <tbody>
             <tr th:each="documentInfo, state : ${documentInfos}">
-                <th><a th:text="${documentInfo.title}" th:href="${documentInfo.path}"></a></th>
+                <th><a th:text="${documentInfo.getDocument().getDocumentTitle()}" th:href="${documentInfo.getPath()}"></a></th>
                 <th>
-                    <a href="#" th:onclick="postRequest([[${documentInfo.title}+'Update']]); return null;">수정</a>
-                    <form th:id="${documentInfo.title}+'Update'" th:action="${updatePath}" method="post" style="display:none;">
-                        <input type="hidden" name="document_title" th:value="${documentInfo.title}">
+                    <a href="#" th:onclick="postRequest([[${documentInfo.getDocument().getDocumentTitle()}+'Update']]); return null;">수정</a>
+                    <form th:id="${documentInfo.getDocument().getDocumentTitle()}+'Update'" th:action="${updatePagePath}" method="post" style="display:none;">
+                        <input type="hidden" name="document_title" th:value="${documentInfo.getDocument().getDocumentTitle()}">
                     </form>
                 </th>
                 <th>
-                    <a href="#" th:onclick="postRequest([[${documentInfo.title}+'Delete']]); return null;">삭제</a>
-                    <form th:id="${documentInfo.title}+'Delete'" th:action="${deletePath}" method="post" style="display:none;">
-                        <input type="hidden" name="document_title" th:value="${documentInfo.title}">
+                    <a href="#" th:onclick="postRequest([[${documentInfo.getDocument().getDocumentTitle()}+'Delete']]); return null;">삭제</a>
+                    <form th:id="${documentInfo.getDocument().getDocumentTitle()}+'Delete'" th:action="${deletePath}" method="post" style="display:none;">
+                        <input type="hidden" name="document_title" th:value="${documentInfo.getDocument().getDocumentTitle()}">
                     </form>
                 </th>
             </tr>
