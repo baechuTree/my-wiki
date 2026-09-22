@@ -2,13 +2,12 @@ package com.baechu_tree.my_wiki.controller;
 
 import com.baechu_tree.my_wiki.constants.WikiPaths;
 import com.baechu_tree.my_wiki.domain.WikiDocument;
+import com.baechu_tree.my_wiki.dto.WikiCreateRequest;
+import com.baechu_tree.my_wiki.dto.WikiUpdateRequest;
 import com.baechu_tree.my_wiki.service.WikiDocumentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +60,11 @@ public class WikiController {
     }
 
     @PostMapping(WikiPaths.PATH_DOCUMENT_SAVE)
-    public String DocumentSave(Model model, @RequestParam("document_title") String documentTitle, @RequestParam("content") String content) {
+    public String DocumentSave(Model model, @RequestBody WikiCreateRequest documentToSave) {
         WikiDocument document = new WikiDocument(
                 null,
-                documentTitle,
-                content,
+                documentToSave.getDocumentTitle(),
+                documentToSave.getContent(),
                 null,
                 null
         );
@@ -84,21 +83,30 @@ public class WikiController {
 
         WikiDocument document = documentOptional.get();
 
-        model.addAttribute("originalDocumentArticle", document.getContent());
+        model.addAttribute("originalDocument", document);
 
         return "document_update";
     }
 
     @PostMapping(WikiPaths.PATH_DOCUMENT_UPDATE)
-    public String DocumentUpdate(Model model) {
-        // TODO: 문서 업데이트 로직 완성 필요!
-        return null;
+    public String DocumentUpdate(Model model, @RequestBody WikiUpdateRequest documentToUpdate) {
+        WikiDocument document = new WikiDocument(
+                documentToUpdate.getDocumentId(),
+                documentToUpdate.getDocumentTitle(),
+                documentToUpdate.getContent(),
+                null,
+                null
+        );
+        int updatedDocumentId = documentService.update(document);
+
+        if (updatedDocumentId == -1) return "temp_error"; // TODO: 제대로 된 에러 처리 필요!
+        else return "redirect:/";
     }
 
     @PostMapping(WikiPaths.PATH_DOCUMENT_DELETE)
-    public String DocumentDelete(Model model) {
-        // TODO: 문서 삭제 로직 완성 필요!
-        return null;
+    public String DocumentDelete(Model model, @RequestParam String documentId) {
+        documentService.deleteById(Integer.parseInt(documentId));
+        return "redirect:/";
     }
 
     private String GetPathOfSpecificDocumentDetail(String documentTitle) {
